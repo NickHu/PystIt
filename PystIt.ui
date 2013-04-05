@@ -103,6 +103,7 @@
                         <property name="use_stock">True</property>
                         <property name="accel_group">accelgroup</property>
                         <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <signal name="activate" handler="on_imagemenuitemOpen_activate" object="notebookTabs" swapped="no"/>
                       </object>
                     </child>
                     <child>

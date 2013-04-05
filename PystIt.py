@@ -67,8 +67,9 @@ class PystDB:
 
       #print '%s %s %s' % (rows.keys()[0], rows.keys()[1], rows.keys()[2])
       #print rows.keys()
-      for row in rows:
-        print '%s %s' % (row['Title'], row['Note'])
+      #for row in rows:
+      #  print '%s %s' % (row['Title'], row['Note'])
+      return rows
 
 class PystIt:
 
@@ -116,6 +117,27 @@ class PystIt:
       note = (args[0].get_tab_label_text(args[0].get_nth_page(i)), args[0].get_nth_page(i).get_child().get_buffer().get_text(args[0].get_nth_page(i).get_child().get_buffer().get_start_iter(), args[0].get_nth_page(i).get_child().get_buffer().get_end_iter(), 1))
       notes.append(note)
     self.pystit.writeNote(notes)
+
+  def on_imagemenuitemOpen_activate(self, *args):
+    rows = self.pystit.readNote()
+    for row in rows:
+      editor = Gtk.ScrolledWindow()
+      editor.add(Gtk.TextView())
+      editor.set_shadow_type(Gtk.ShadowType.IN)
+      
+      sensitiveitems = [\
+        self.builder.get_object('imagemenuitemCut'),\
+        self.builder.get_object('imagemenuitemCopy'),\
+        self.builder.get_object('imagemenuitemPaste'),\
+        self.builder.get_object('imagemenuitemDelete'),\
+        self.builder.get_object('imagemenuitemClose'),\
+        ]
+  
+      editor.get_child().connect('focus-in-event', self.on_editor_focus_in_event, sensitiveitems)
+      editor.get_child().connect('focus-out-event', self.on_editor_focus_out_event, sensitiveitems)
+      editor.get_child().get_buffer().set_text(row['Note'])
+      editor.show_all()
+      args[0].append_page(editor, Gtk.Label(row['Title']))
 
   def on_imagemenuitemNew_activate(self, *args):
     editor = Gtk.ScrolledWindow()
