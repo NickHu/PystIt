@@ -108,6 +108,10 @@ class PystIt:
     dialog.run()
     dialog.destroy()
 
+  def gtk_widget_hide(self, window, event):
+    window.hide()
+    return True
+
   def on_windowMain_delete_event(self, *args):
     Gtk.main_quit(*args)
 
@@ -140,6 +144,11 @@ class PystIt:
       args[0].append_page(editor, Gtk.Label(row['Title']))
 
   def on_imagemenuitemNew_activate(self, *args):
+    self.builder.get_object('windowTitle').show_all()
+
+  def on_entryTitle_activate(self, *args):
+    text = self.builder.get_object('entryTitle').get_text()
+    self.builder.get_object('windowTitle').hide()
     editor = Gtk.ScrolledWindow()
     editor.add(Gtk.TextView())
     editor.set_shadow_type(Gtk.ShadowType.IN)
@@ -155,7 +164,7 @@ class PystIt:
     editor.get_child().connect('focus-in-event', self.on_editor_focus_in_event, sensitiveitems)
     editor.get_child().connect('focus-out-event', self.on_editor_focus_out_event, sensitiveitems)
     editor.show_all()
-    args[0].append_page(editor, Gtk.Label('untitled'))
+    args[0].append_page(editor, Gtk.Label(text))
     
   def on_editor_focus_in_event(self, *args):
     self.focused = args[0]
