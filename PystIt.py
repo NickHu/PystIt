@@ -164,7 +164,13 @@ class PystIt:
     editor.get_child().connect('focus-in-event', self.on_editor_focus_in_event, sensitiveitems)
     editor.get_child().connect('focus-out-event', self.on_editor_focus_out_event, sensitiveitems)
     editor.show_all()
-    args[0].append_page(editor, Gtk.Label(text))
+    existing = False
+    for i in range(0, args[0].get_n_pages()):
+      if text == args[0].get_tab_label_text(args[0].get_nth_page(i)):
+        self.error(self, 'That title already exists!')
+        existing = True
+    if not existing:
+      args[0].append_page(editor, Gtk.Label(text))
     
   def on_editor_focus_in_event(self, *args):
     self.focused = args[0]
